@@ -1,0 +1,24 @@
+version: '3.7'
+
+services:
+    db:
+        image: bitnami/postgresql:latest
+        environment:
+            - POSTGRESQL_USERNAME=thumbs-up
+            - POSTGRESQL_PASSWORD=supersecret
+            - POSTGRESQL_DATABASE=thumbs-up
+        volumes:
+            - type: bind
+              source: ./docker-entrypoint-initdb.d
+              target: /docker-entrypoint-initdb.d
+            # - type: volume
+            #   source: docker-entrypoint-preinitdb.d
+            #   target: /docker-entrypoint-preinitdb.d
+            # - type: volume
+            #   source: postgres-data
+            #   target: /bitnami/postgresql
+        ports:
+            - 5432:5432
+# volumes:
+#     docker-entrypoint-preinitdb.d:
+#     postgres-data:
