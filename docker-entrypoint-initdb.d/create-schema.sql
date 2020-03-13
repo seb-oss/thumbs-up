@@ -68,5 +68,20 @@ CREATE TRIGGER upsert_thumb_trigger
 INSTEAD OF INSERT OR UPDATE ON thumbs_up
 FOR EACH ROW EXECUTE FUNCTION upsert_thumb();
 
-INSERT INTO thumbs_up(page_url, github_user, thumb_up)
-VALUES('hej', 1000, true);
+CREATE FUNCTION delete_thumb()
+    RETURNS trigger AS
+$$
+BEGIN
+    DELETE FROM thumbs t
+    USING github_users g, page_urls p
+    WHERE g.id = t.user_id
+    AND p.id = t.url_id
+    AND p.page_url = OLD.page_url
+    AND g.github_user = OLD.github_user;
+    RETURN OLD;
+END;
+$$ language plpgsql;
+
+CREATE TRIGGER delete_thumb_trigger
+INSTEAD OF DELETE ON thumbs_up
+FOR EACH ROW EXECUTE FUNCTION delete_thumb();
