@@ -1,3 +1,10 @@
+const settings = require("./settings");
+const authorizeUrl = settings.githubUrl + "/login/oauth/authorize";
+const accessTokenUrl = settings.githubUrl + "/login/oauth/access_token";
+const { client_id, client_secret, state_password } = settings;
+const { badRequest } = require("./errors");
+const { encodeState } = require("./state");
+
 async function authorizeUser(req, res) {
   const { redirect_uri: endUserUrl } = req.query;
   if (!endUserUrl) {
@@ -6,7 +13,10 @@ async function authorizeUser(req, res) {
 
   const state = await encodeState(endUserUrl, state_password);
 
-  const authUrl = github.getAuthorizeUrl(client_id, state);
+  const authUrl = `${authorizeUrl}?${new URLSearchParams({
+    client_id,
+    state
+  })}`;
   return res.redirect(authUrl);
 }
 
