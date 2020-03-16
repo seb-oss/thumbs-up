@@ -85,3 +85,16 @@ $$ language plpgsql;
 CREATE TRIGGER delete_thumb_trigger
 INSTEAD OF DELETE ON thumbs_up
 FOR EACH ROW EXECUTE FUNCTION delete_thumb();
+
+CREATE FUNCTION total_thumbs(given_url TEXT, given_user INT)
+    RETURNS TABLE (thumbs_up BIGINT, thumbs_down BIGINT, user_thumb_up BOOLEAN)
+AS
+$$
+    SELECT
+        count(*) FILTER (WHERE thumb_up = TRUE) AS thumbs_up,
+        count(*) FILTER (WHERE thumb_up = FALSE) AS thumbs_down,
+        bool_or(thumb_up) FILTER (WHERE github_user = given_user) AS user_thumb_up
+    FROM thumbs_up
+    WHERE page_url = given_url;
+$$
+LANGUAGE sql;
