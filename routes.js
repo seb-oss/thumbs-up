@@ -3,7 +3,8 @@ const authorizeUrl = settings.githubUrl + "/login/oauth/authorize";
 const accessTokenUrl = settings.githubUrl + "/login/oauth/access_token";
 const { client_id, client_secret, state_password } = settings;
 const { badRequest } = require("./errors");
-const { encodeState } = require("./state");
+const { encodeState, tryDecodeState } = require("./state");
+const got = require("got");
 
 async function authorizeUser(req, res) {
   const { redirect_uri: endUserUrl } = req.query;
@@ -37,12 +38,32 @@ async function handleOauthCallback(req, res) {
     return badRequest(returnUrl.message);
   }
 
-  const accessToken = await github.getAccessToken({ code, state });
+  const accessToken = await getAccessToken({ code, state });
 
   res.set("Set-Cookie", `token=${accessToken}`);
   return res.redirect(returnUrl);
 }
 
+async function getAccessToken({ code, state }) {
+  const response = await got.post(accessTokenUrl, {
+    json: {
+      client_id,
+      client_secret,
+      code,
+      state
+    },
+    headers: {
+      "User-Agent": "Thumbs-up"
+    }
+  });
+  console.log(response);
+  if (response.body.error) {
+    console.log(response.body.error);
+    throw new Error(`Access token response had status ${response.body.error}.`);
+  }
+
+  return response.body.access_token;
+}
 module.exports = {
   handleOauthCallback,
   authorizeUser

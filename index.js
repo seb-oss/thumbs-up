@@ -1,6 +1,6 @@
 // const pgAdapter = require("./postgresAdapter");
 const app = require("express")();
-const { authorizeUser } = require("./routes");
+const { authorizeUser, handleOauthCallback } = require("./routes");
 const bodyParser = require("body-parser");
 const PORT = 5000;
 
@@ -24,6 +24,7 @@ function errorHandler(err, _req, res, _next) {
 app.get("/", (req, res) => res.send("I'm alive!"));
 
 app.get("/authorize", authorizeUser);
+app.get("/authorized", handleOauthCallback);
 
 app.get("/thumbs", (req, res) => {
   const { pageUrl } = req.query;
