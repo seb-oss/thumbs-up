@@ -35,7 +35,7 @@ app.get("/authorize", authorizeUser);
 app.get("/authorized", handleOauthCallback);
 
 app.get("/thumbs", cors(corsSettings), (req, res) => {
-  console.log(req.cookies);
+  console.log(req.cookies.token);
   const { pageUrl } = req.query;
 
   res.sendStatus(200);
