@@ -8,7 +8,13 @@ services:
       - ./test:/app/test
       - ./package.json:/app/package.json
       - ./settings.js:/app/settings.js
-    command: nodemon
+    environment:
+      - db_host=db
+      - db_password=supersecret
+      - db_user=thumbs_up
+    command: sleep 200000
+    ports:
+      - 5000:5000
   db:
     image: bitnami/postgresql:latest
     environment:
