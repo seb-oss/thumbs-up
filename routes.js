@@ -40,7 +40,7 @@ async function handleOauthCallback(req, res) {
 
   const accessToken = await getAccessToken({ code, state });
 
-  res.set("Set-Cookie", `token=${accessToken}`);
+  res.cookie("token", accessToken, { domain: "localhost" });
   return res.redirect(returnUrl);
 }
 
@@ -52,7 +52,9 @@ async function getAccessToken({ code, state }) {
       code,
       state
     },
+    responseType: "json",
     headers: {
+      Accept: "application/json",
       "User-Agent": "Thumbs-up"
     }
   });

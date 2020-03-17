@@ -3,7 +3,10 @@ const app = require("express")();
 const { authorizeUser, handleOauthCallback } = require("./routes");
 const bodyParser = require("body-parser");
 const PORT = 5000;
-
+const cookieParser = require("cookie-parser");
+const cors = require("cors");
+const settings = require("./settings");
+app.use(cookieParser());
 app.use(bodyParser.json());
 
 function errorHandler(err, _req, res, _next) {
@@ -21,12 +24,18 @@ function errorHandler(err, _req, res, _next) {
   }
 }
 
+const corsSettings = {
+  origin: settings.origins || "*",
+  credentials: true
+};
+
 app.get("/", (req, res) => res.send("I'm alive!"));
 
 app.get("/authorize", authorizeUser);
 app.get("/authorized", handleOauthCallback);
 
-app.get("/thumbs", (req, res) => {
+app.get("/thumbs", cors(corsSettings), (req, res) => {
+  console.log(req.cookies);
   const { pageUrl } = req.query;
 
   res.sendStatus(200);
