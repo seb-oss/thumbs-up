@@ -6,7 +6,7 @@ CREATE TABLE page_urls (
 
 CREATE TABLE github_users (
     id SERIAL PRIMARY KEY,
-    github_user INT UNIQUE
+    github_user TEXT UNIQUE
 );
 
 CREATE TABLE thumbs (
@@ -86,7 +86,7 @@ CREATE TRIGGER delete_thumb_trigger
 INSTEAD OF DELETE ON thumbs_up
 FOR EACH ROW EXECUTE FUNCTION delete_thumb();
 
-CREATE FUNCTION total_thumbs(given_url TEXT, given_user INT)
+CREATE FUNCTION total_thumbs(given_url TEXT, given_user TEXT)
     RETURNS TABLE (thumbs_up BIGINT, thumbs_down BIGINT, user_thumb_up BOOLEAN)
 AS
 $$
