@@ -25,7 +25,7 @@ function errorHandler(err, _req, res, _next) {
 }
 
 const corsSettings = {
-  origin: settings.origins || "*",
+  origin: settings.origins || "http://localhost:5500",
   credentials: true
 };
 
