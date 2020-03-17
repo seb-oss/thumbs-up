@@ -66,7 +66,17 @@ async function getAccessToken({ code, state }) {
 
   return response.body.access_token;
 }
+
+function convertSentimentToThumb(sentiment) {
+  if (sentiment === null) {
+    return null;
+  }
+
+  return sentiment ? "thumbUp" : "thumbDown";
+}
+
 module.exports = {
   handleOauthCallback,
-  authorizeUser
+  authorizeUser,
+  convertSentimentToThumb
 };
