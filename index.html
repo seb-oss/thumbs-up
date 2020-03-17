@@ -2,8 +2,20 @@
 <html lang="en">
   <head>
     <script>
-      fetch("http://localhost:5000/thumbs", { credentials: "include" });
-      console.log("hej");
+      fetch("http://localhost:5000/thumbs?pageUrl=certificates", {
+        credentials: "include"
+      })
+      .then(res => res.json())
+      .then(res => {
+        document.getElementById('thumbs-up').textContent = res.thumbsUp
+        document.getElementById('thumbs-down').textContent = res.thumbsDown
+        document.getElementById('user-thumb').textContent = res.userThumb
+      });
     </script>
   </head>
+  <body>
+    <p id="thumbs-up"></div>
+    <p id="thumbs-down"></div>
+    <p id="user-thumb"></div>
+  </body>
 </html>
