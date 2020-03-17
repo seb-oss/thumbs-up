@@ -1,6 +1,5 @@
-const routes = require(process.cwd() + "/routes");
+const routes = require(process.cwd() + "/lib/routes");
 
 describe("routes/getThumbs", () => {
   routes.convertSentimentToThumb("hej");
-  console.log("Hej");
 });

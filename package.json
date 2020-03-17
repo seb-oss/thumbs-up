@@ -4,7 +4,7 @@
   "description": "",
   "main": "lib/index.js",
   "scripts": {
-    "test": "mocha ./test/unit --recursive --watch"
+    "test": "nodemon --exec mocha ./test/unit --recursive"
   },
   "repository": {
     "type": "git",
