@@ -1,0 +1,41 @@
+.thumb {
+  font-size: 30px;
+  font-weight: normal;
+  font-style: normal;
+  padding-left: 3px;
+  display: inline-block;
+}
+.selected {
+  --fa-primary-color: #007ac7;
+  --fa-secondary-color: #007ac7;
+}
+.selected:hover {
+  --fa-secondary-color: grey;
+}
+
+.thumb:not(.selected) {
+  --fa-secondary-color: grey;
+}
+#thumbs-down:not(.selected):hover {
+  --fa-secondary-color: red;
+}
+
+#thumbs-up {
+  padding-bottom: 11px;
+}
+
+#thumbs-down {
+  padding-top: 11px;
+}
+
+#thumbs-container {
+  align-items: center;
+  display: flex;
+}
+
+#thumbs-total {
+  font-size: 16px;
+  font-weight: bold;
+  margin-left: 10px;
+  font-family: Arial, Helvetica, sans-serif;
+}

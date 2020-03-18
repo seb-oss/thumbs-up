@@ -1,21 +1,40 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <link rel="stylesheet" href="./index.css" />
+    <link
+      rel="stylesheet"
+      href="https://pro.fontawesome.com/releases/v5.12.0/css/all.css"
+      crossorigin="anonymous"
+    />
     <script>
       fetch("http://localhost:5000/thumbs?pageUrl=certificates", {
         credentials: "include"
       })
-      .then(res => res.json())
-      .then(res => {
-        document.getElementById('thumbs-up').textContent = res.thumbsUp
-        document.getElementById('thumbs-down').textContent = res.thumbsDown
-        document.getElementById('user-thumb').textContent = res.userThumb
-      });
+        .then(res => res.json())
+        .then(res => {
+          if (res.userThumb) {
+            const thumbSelector =
+              res.userThumb === "thumbUp" ? "thumbs-up" : "thumbs-down";
+            document.getElementById(thumbSelector).classList.add("selected");
+            const selected = document.getElementById(thumbSelector);
+            selected.addEventListener("click", ({ target }) =>
+              target.classList.remove("selected")
+            );
+          }
+          document.getElementById("thumbs-total").textContent =
+            res.thumbsUp - res.thumbsDown;
+        });
     </script>
   </head>
   <body>
-    <p id="thumbs-up"></div>
-    <p id="thumbs-down"></div>
-    <p id="user-thumb"></div>
+    <div id="thumbs-container">
+      <i
+        id="thumbs-up"
+        class="thumb-item thumb fad fa-thumbs-up fa-flip-horizontal"
+      ></i>
+      <i id="thumbs-down" class="thumb-item thumb fad fa-thumbs-down "></i>
+      <p id="thumbs-total" class="thumb-item"></p>
+    </div>
   </body>
 </html>
