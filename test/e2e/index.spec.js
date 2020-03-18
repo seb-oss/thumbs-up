@@ -45,4 +45,64 @@ describe("POST /thumbs", () => {
         done();
       });
   });
+
+  it("adds a thumbs down to examples_3 page when user first up then down", done => {
+    chai
+      .request(app)
+      .post("/thumbs")
+      .set("Cookie", `token=${token}`)
+      .send({
+        userThumb: "thumbUp",
+        pageUrl: "examples_3"
+      })
+      .end(() =>
+        chai
+          .request(app)
+          .post("/thumbs")
+          .set("Cookie", `token=${token}`)
+          .send({
+            userThumb: "thumbDown",
+            pageUrl: "examples_3"
+          })
+          .end((err, res) => {
+            expect(res).to.have.status(200);
+            expect(res.body).to.deep.equal({
+              thumbsUp: 0,
+              thumbsDown: 1,
+              userThumb: "thumbDown"
+            });
+            done();
+          })
+      );
+  });
+
+  it("adds a thumbs up to examples_4 page when user first up then up again", done => {
+    chai
+      .request(app)
+      .post("/thumbs")
+      .set("Cookie", `token=${token}`)
+      .send({
+        userThumb: "thumbUp",
+        pageUrl: "examples_4"
+      })
+      .end(() =>
+        chai
+          .request(app)
+          .post("/thumbs")
+          .set("Cookie", `token=${token}`)
+          .send({
+            userThumb: "thumbUp",
+            pageUrl: "examples_4"
+          })
+          .end((err, res) => {
+            expect(res).to.have.status(200);
+            expect(res.body).to.deep.equal({
+              thumbsUp: 1,
+              thumbsDown: 0,
+              userThumb: "thumbUp"
+            });
+            done();
+          })
+      );
+  });
 });
