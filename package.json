@@ -19,17 +19,15 @@
   },
   "homepage": "https://github.com/sebgroup/thumbs-up#readme",
   "dependencies": {
-    "@keyv/postgres": "^1.0.16",
-    "chai-http": "^4.3.0",
     "cookie-parser": "^1.4.5",
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "got": "^10.6.0",
-    "keyv": "^4.0.0",
     "pg": "^7.18.2"
   },
   "devDependencies": {
     "chai": "^4.2.0",
+    "minimist": "^1.2.3",
     "mocha": "^7.1.0",
     "nodemon": "^2.0.2"
   }
