@@ -8,23 +8,78 @@
       crossorigin="anonymous"
     />
     <script>
-      fetch("http://localhost:5000/thumbs?pageUrl=certificates", {
+      const pageUrl = "certificates";
+      function deleteThumb(pageUrl) {
+        fetch(`http://localhost:5000/thumbs?pageUrl=${pageUrl}`, {
+          method: "DELETE",
+          credentials: "include"
+        })
+          .then(res => res.json())
+          .then(setElements);
+      }
+      function setThumb(pageUrl, userThumb) {
+        fetch("http://localhost:5000/thumbs", {
+          method: "POST",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            pageUrl,
+            userThumb
+          })
+        })
+          .then(res => res.json())
+          .then(setElements);
+      }
+      function clearListeners(elementId) {
+        const thumbsUpElement = document.getElementById(elementId);
+        const elClone = thumbsUpElement.cloneNode(true);
+        thumbsUpElement.parentNode.replaceChild(elClone, thumbsUpElement);
+      }
+      function setElements(res) {
+        clearListeners("thumbs-up");
+        clearListeners("thumbs-down");
+        const thumbsUpElement = document.getElementById("thumbs-up");
+        const thumbsDownElement = document.getElementById("thumbs-down");
+
+        if (res.userThumb) {
+          const activeThumbSelector =
+            res.userThumb === "thumbUp" ? "thumbs-up" : "thumbs-down";
+          const inactiveThumbSelector =
+            res.userThumb === "thumbUp" ? "thumbs-down" : "thumbs-up";
+          const activeThumb = document.getElementById(activeThumbSelector);
+          const inactiveThumb = document.getElementById(inactiveThumbSelector);
+          inactiveThumb.classList.remove("selected");
+          activeThumb.classList.add("selected");
+          const opposite =
+            res.userThumb === "thumbUp" ? "thumbDown" : "thumbUp";
+          activeThumb.addEventListener("click", () => deleteThumb(pageUrl));
+          inactiveThumb.addEventListener("click", () =>
+            setThumb(pageUrl, opposite)
+          );
+        } else {
+          thumbsUpElement.classList.remove("selected");
+          thumbsDownElement.classList.remove("selected");
+          document
+            .getElementById("thumbs-up")
+            .addEventListener("click", () => setThumb(pageUrl, "thumbUp"));
+          thumbsDownElement.addEventListener("click", () =>
+            setThumb(pageUrl, "thumbDown")
+          );
+        }
+        document.getElementById("thumbs-total").textContent =
+          res.thumbsUp - res.thumbsDown;
+      }
+      if (!document.cookie.includes("token")) {
+        window.location.href =
+          "http://localhost:5000/authorize?redirect_uri=http://localhost:5500";
+      }
+      fetch(`http://localhost:5000/thumbs?pageUrl=${pageUrl}`, {
         credentials: "include"
       })
         .then(res => res.json())
-        .then(res => {
-          if (res.userThumb) {
-            const thumbSelector =
-              res.userThumb === "thumbUp" ? "thumbs-up" : "thumbs-down";
-            document.getElementById(thumbSelector).classList.add("selected");
-            const selected = document.getElementById(thumbSelector);
-            selected.addEventListener("click", ({ target }) =>
-              target.classList.remove("selected")
-            );
-          }
-          document.getElementById("thumbs-total").textContent =
-            res.thumbsUp - res.thumbsDown;
-        });
+        .then(setElements);
     </script>
   </head>
   <body>
