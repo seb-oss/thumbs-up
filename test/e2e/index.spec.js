@@ -105,4 +105,36 @@ describe("POST /thumbs", () => {
           })
       );
   });
+
+  it("adds a thumb and removes it from examples_5 page", done => {
+    chai
+      .request(app)
+      .post("/thumbs")
+      .set("Cookie", `token=${token}`)
+      .send({
+        userThumb: "thumbUp",
+        pageUrl: "examples_5"
+      })
+      .end((err, res) => {
+        expect(res).to.have.status(200);
+        expect(res.body).to.deep.equal({
+          thumbsUp: 1,
+          thumbsDown: 0,
+          userThumb: "thumbUp"
+        });
+        chai
+          .request(app)
+          .del("/thumbs?pageUrl=examples_5")
+          .set("Cookie", `token=${token}`)
+          .end((err, res) => {
+            expect(res).to.have.status(200);
+            expect(res.body).to.deep.equal({
+              thumbsUp: 0,
+              thumbsDown: 0,
+              userThumb: null
+            });
+            done();
+          });
+      });
+  });
 });
