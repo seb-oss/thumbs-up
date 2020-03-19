@@ -28,19 +28,13 @@ services:
       - POSTGRESQL_PASSWORD=supersecret
       - POSTGRESQL_DATABASE=thumbs_up
     volumes:
-      - type: bind
-        source: ./docker-entrypoint-initdb.d
-        target: /docker-entrypoint-initdb.d
-      # - type: volume
-      #   source: docker-entrypoint-preinitdb.d
-      #   target: /docker-entrypoint-preinitdb.d
-      # - type: volume
-      #   source: postgres-data
-      #   target: /bitnami/postgresql
+      - ./docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
+      - docker-entrypoint-preinitdb.d:/docker-entrypoint-preinitdb.d
+      - postgres-data:/bitnami/postgresql
     ports:
       - 5432:5432
 
 volumes:
     node_modules:
-#     docker-entrypoint-preinitdb.d:
-#     postgres-data:
+    docker-entrypoint-preinitdb.d:
+    postgres-data:
