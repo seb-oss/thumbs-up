@@ -5,18 +5,25 @@
   padding-left: 3px;
   display: inline-block;
 }
-#thumbs-up.selected {
+#thumb-up.selected {
   --fa-primary-color: #007ac7;
   --fa-secondary-color: #007ac7;
 }
 
-#thumbs-down.selected {
+#thumb-down.selected {
   --fa-secondary-color: red;
   --fa-primary-color: red;
 }
 
-#thumbs-down.selected:hover,
-#thumbs-up.selected:hover {
+#thumb-down:not(.selected):hover {
+  --fa-secondary-color: red;
+}
+#thumb-up:not(.selected):hover {
+  --fa-secondary-color: #007ac7;
+}
+
+#thumb-down.selected:hover,
+#thumb-up.selected:hover {
   --fa-secondary-color: grey;
 }
 
@@ -24,11 +31,11 @@
   --fa-secondary-color: grey;
 }
 
-#thumbs-up {
+#thumb-up {
   padding-bottom: 11px;
 }
 
-#thumbs-down {
+#thumb-down {
   padding-top: 11px;
 }
 
