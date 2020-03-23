@@ -7,6 +7,7 @@
       const pageUrl = "certificates";
       const apiBaseUrl = "http://localhost:5000";
       const frontendBaseUrl = "http://localhost:5500";
+
       function deleteThumb(pageUrl) {
         fetch(`${apiBaseUrl}/thumbs?pageUrl=${pageUrl}`, {
           method: "DELETE",
@@ -15,7 +16,8 @@
           .then(res => res.json())
           .then(setElements);
       }
-      function setThumb(pageUrl, userThumb) {
+
+      function setThumb(pageUrl, clickedThumb) {
         fetch(`${apiBaseUrl}/thumbs`, {
           method: "POST",
           credentials: "include",
@@ -24,27 +26,37 @@
           },
           body: JSON.stringify({
             pageUrl,
-            userThumb
+            userThumb: clickedThumb === "thumb-up" ? "thumbUp" : "thumbDown"
           })
         })
           .then(res => res.json())
           .then(setElements);
       }
+
+      function getThumbs() {
+        fetch(`${apiBaseUrl}/thumbs?pageUrl=${pageUrl}`, {
+          credentials: "include"
+        })
+          .then(res => res.json())
+          .then(setElements);
+      }
+
       function clearListeners(elementId) {
         const thumbsUpElement = document.getElementById(elementId);
         const elClone = thumbsUpElement.cloneNode(true);
         thumbsUpElement.parentNode.replaceChild(elClone, thumbsUpElement);
       }
+
       function getThumbState(selectedUserThumb) {
         if (selectedUserThumb === "thumbUp") {
           return {
-            active: { cssSelector: "thumb-up", thumb: "thumbUp" },
-            inactive: { cssSelector: "thumb-down", thumb: "thumbDown" }
+            active: "thumb-up",
+            inactive: "thumb-down"
           };
         } else {
           return {
-            active: { cssSelector: "thumb-down", thumb: "thumbDown" },
-            inactive: { cssSelector: "thumb-up", thumb: "thumbUp" }
+            active: "thumb-down",
+            inactive: "thumb-up"
           };
         }
       }
@@ -57,37 +69,32 @@
 
         if (res.userThumb) {
           const state = getThumbState(res.userThumb);
-          const activeThumb = document.getElementById(state.active.cssSelector);
-          const inactiveThumb = document.getElementById(
-            state.inactive.cssSelector
-          );
+          const activeThumb = document.getElementById(state.active);
+          const inactiveThumb = document.getElementById(state.inactive);
           inactiveThumb.classList.remove("selected");
           activeThumb.classList.add("selected");
           activeThumb.addEventListener("click", () => deleteThumb(pageUrl));
           inactiveThumb.addEventListener("click", () =>
-            setThumb(pageUrl, state.inactive.thumb)
+            setThumb(pageUrl, state.inactive)
           );
         } else {
           thumbsUpElement.classList.remove("selected");
           thumbsDownElement.classList.remove("selected");
           document
             .getElementById("thumb-up")
-            .addEventListener("click", () => setThumb(pageUrl, "thumbUp"));
+            .addEventListener("click", () => setThumb(pageUrl, "thumb-up"));
           thumbsDownElement.addEventListener("click", () =>
-            setThumb(pageUrl, "thumbDown")
+            setThumb(pageUrl, "thumb-down")
           );
         }
-        document.getElementById("thumb-total").textContent =
+        document.getElementById("thumbs-total").textContent =
           res.thumbsUp - res.thumbsDown;
       }
+
       if (!document.cookie.includes("token")) {
         window.location.href = `${apiBaseUrl}/authorize?redirect_uri=${frontendBaseUrl}`;
       }
-      fetch(`${apiBaseUrl}/thumbs?pageUrl=${pageUrl}`, {
-        credentials: "include"
-      })
-        .then(res => res.json())
-        .then(setElements);
+      getThumbs();
     </script>
   </head>
   <body>
