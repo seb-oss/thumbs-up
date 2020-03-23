@@ -5,19 +5,23 @@
   padding-left: 3px;
   display: inline-block;
 }
-.selected {
+#thumbs-up.selected {
   --fa-primary-color: #007ac7;
   --fa-secondary-color: #007ac7;
 }
-.selected:hover {
+
+#thumbs-down.selected {
+  --fa-secondary-color: red;
+  --fa-primary-color: red;
+}
+
+#thumbs-down.selected:hover,
+#thumbs-up.selected:hover {
   --fa-secondary-color: grey;
 }
 
 .thumb:not(.selected) {
   --fa-secondary-color: grey;
-}
-#thumbs-down:not(.selected):hover {
-  --fa-secondary-color: red;
 }
 
 #thumbs-up {
