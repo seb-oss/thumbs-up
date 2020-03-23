@@ -11,12 +11,12 @@
 }
 
 #thumb-down.selected {
-  --fa-secondary-color: red;
-  --fa-primary-color: red;
+  --fa-secondary-color: #f03529;
+  --fa-primary-color: #f03529;
 }
 
 #thumb-down:not(.selected):hover {
-  --fa-secondary-color: red;
+  --fa-secondary-color: #f03529;
 }
 #thumb-up:not(.selected):hover {
   --fa-secondary-color: #007ac7;
@@ -24,11 +24,13 @@
 
 #thumb-down.selected:hover,
 #thumb-up.selected:hover {
-  --fa-secondary-color: grey;
+  --fa-secondary-color: #808080;
+  --fa-primary-color: #333333;
 }
 
 .thumb:not(.selected) {
-  --fa-secondary-color: grey;
+  --fa-secondary-color: #808080;
+  --fa-primary-color: #333333;
 }
 
 #thumb-up {
