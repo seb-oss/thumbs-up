@@ -5,8 +5,10 @@
     <link rel="stylesheet" href="/css/all.min.css" />
     <script>
       const pageUrl = "certificates";
+      const apiBaseUrl = "http://localhost:5000";
+      const frontendBaseUrl = "http://localhost:5500";
       function deleteThumb(pageUrl) {
-        fetch(`http://localhost:5000/thumbs?pageUrl=${pageUrl}`, {
+        fetch(`${apiBaseUrl}/thumbs?pageUrl=${pageUrl}`, {
           method: "DELETE",
           credentials: "include"
         })
@@ -14,7 +16,7 @@
           .then(setElements);
       }
       function setThumb(pageUrl, userThumb) {
-        fetch("http://localhost:5000/thumbs", {
+        fetch(`${apiBaseUrl}/thumbs`, {
           method: "POST",
           credentials: "include",
           headers: {
@@ -33,45 +35,55 @@
         const elClone = thumbsUpElement.cloneNode(true);
         thumbsUpElement.parentNode.replaceChild(elClone, thumbsUpElement);
       }
+      function getThumbState(selectedUserThumb) {
+        if (selectedUserThumb === "thumbUp") {
+          return {
+            active: { cssSelector: "thumb-up", thumb: "thumbUp" },
+            inactive: { cssSelector: "thumb-down", thumb: "thumbDown" }
+          };
+        } else {
+          return {
+            active: { cssSelector: "thumb-down", thumb: "thumbDown" },
+            inactive: { cssSelector: "thumb-up", thumb: "thumbUp" }
+          };
+        }
+      }
+
       function setElements(res) {
-        clearListeners("thumbs-up");
-        clearListeners("thumbs-down");
-        const thumbsUpElement = document.getElementById("thumbs-up");
-        const thumbsDownElement = document.getElementById("thumbs-down");
+        clearListeners("thumb-up");
+        clearListeners("thumb-down");
+        const thumbsUpElement = document.getElementById("thumb-up");
+        const thumbsDownElement = document.getElementById("thumb-down");
 
         if (res.userThumb) {
-          const activeThumbSelector =
-            res.userThumb === "thumbUp" ? "thumbs-up" : "thumbs-down";
-          const inactiveThumbSelector =
-            res.userThumb === "thumbUp" ? "thumbs-down" : "thumbs-up";
-          const activeThumb = document.getElementById(activeThumbSelector);
-          const inactiveThumb = document.getElementById(inactiveThumbSelector);
+          const state = getThumbState(res.userThumb);
+          const activeThumb = document.getElementById(state.active.cssSelector);
+          const inactiveThumb = document.getElementById(
+            state.inactive.cssSelector
+          );
           inactiveThumb.classList.remove("selected");
           activeThumb.classList.add("selected");
-          const opposite =
-            res.userThumb === "thumbUp" ? "thumbDown" : "thumbUp";
           activeThumb.addEventListener("click", () => deleteThumb(pageUrl));
           inactiveThumb.addEventListener("click", () =>
-            setThumb(pageUrl, opposite)
+            setThumb(pageUrl, state.inactive.thumb)
           );
         } else {
           thumbsUpElement.classList.remove("selected");
           thumbsDownElement.classList.remove("selected");
           document
-            .getElementById("thumbs-up")
+            .getElementById("thumb-up")
             .addEventListener("click", () => setThumb(pageUrl, "thumbUp"));
           thumbsDownElement.addEventListener("click", () =>
             setThumb(pageUrl, "thumbDown")
           );
         }
-        document.getElementById("thumbs-total").textContent =
+        document.getElementById("thumb-total").textContent =
           res.thumbsUp - res.thumbsDown;
       }
       if (!document.cookie.includes("token")) {
-        window.location.href =
-          "http://localhost:5000/authorize?redirect_uri=http://localhost:5500";
+        window.location.href = `${apiBaseUrl}/authorize?redirect_uri=${frontendBaseUrl}`;
       }
-      fetch(`http://localhost:5000/thumbs?pageUrl=${pageUrl}`, {
+      fetch(`${apiBaseUrl}/thumbs?pageUrl=${pageUrl}`, {
         credentials: "include"
       })
         .then(res => res.json())
@@ -81,10 +93,10 @@
   <body>
     <div id="thumbs-container">
       <i
-        id="thumbs-up"
+        id="thumb-up"
         class="thumb-item thumb fad fa-thumbs-up fa-flip-horizontal"
       ></i>
-      <i id="thumbs-down" class="thumb-item thumb fad fa-thumbs-down "></i>
+      <i id="thumb-down" class="thumb-item thumb fad fa-thumbs-down "></i>
       <p id="thumbs-total" class="thumb-item"></p>
     </div>
   </body>
