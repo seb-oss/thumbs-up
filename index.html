@@ -4,7 +4,7 @@
     <link rel="stylesheet" href="/css/index.css" />
     <link rel="stylesheet" href="/css/all.min.css" />
     <script>
-      const pageUrl = "certificates";
+      const pageUrl = location.search.substr(1).split("=");
       const apiBaseUrl = "http://localhost:5000";
       const frontendBaseUrl = "http://localhost:5500";
 
