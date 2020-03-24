@@ -13,7 +13,7 @@ describe("POST /thumbs", () => {
       .set("Cookie", `token=${token}`)
       .send({
         userThumb: "thumbUp",
-        pageUrl: "examples"
+        pageId: "examples"
       })
       .end((err, res) => {
         expect(res).to.have.status(200);
@@ -33,7 +33,7 @@ describe("POST /thumbs", () => {
       .set("Cookie", `token=${token}`)
       .send({
         userThumb: "thumbDown",
-        pageUrl: "new_examples"
+        pageId: "new_examples"
       })
       .end((err, res) => {
         expect(res).to.have.status(200);
@@ -53,7 +53,7 @@ describe("POST /thumbs", () => {
       .set("Cookie", `token=${token}`)
       .send({
         userThumb: "thumbUp",
-        pageUrl: "examples_3"
+        pageId: "examples_3"
       })
       .end(() =>
         chai
@@ -62,7 +62,7 @@ describe("POST /thumbs", () => {
           .set("Cookie", `token=${token}`)
           .send({
             userThumb: "thumbDown",
-            pageUrl: "examples_3"
+            pageId: "examples_3"
           })
           .end((err, res) => {
             expect(res).to.have.status(200);
@@ -83,7 +83,7 @@ describe("POST /thumbs", () => {
       .set("Cookie", `token=${token}`)
       .send({
         userThumb: "thumbUp",
-        pageUrl: "examples_4"
+        pageId: "examples_4"
       })
       .end(() =>
         chai
@@ -92,7 +92,7 @@ describe("POST /thumbs", () => {
           .set("Cookie", `token=${token}`)
           .send({
             userThumb: "thumbUp",
-            pageUrl: "examples_4"
+            pageId: "examples_4"
           })
           .end((err, res) => {
             expect(res).to.have.status(200);
@@ -113,7 +113,7 @@ describe("POST /thumbs", () => {
       .set("Cookie", `token=${token}`)
       .send({
         userThumb: "thumbUp",
-        pageUrl: "examples_5"
+        pageId: "examples_5"
       })
       .end((err, res) => {
         expect(res).to.have.status(200);
@@ -124,7 +124,7 @@ describe("POST /thumbs", () => {
         });
         chai
           .request(app)
-          .del("/thumbs?pageUrl=examples_5")
+          .del("/thumbs?pageId=examples_5")
           .set("Cookie", `token=${token}`)
           .end((err, res) => {
             expect(res).to.have.status(200);

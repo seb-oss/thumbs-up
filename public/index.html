@@ -4,10 +4,10 @@
     <link rel="stylesheet" href="/css/index.css" />
     <link rel="stylesheet" href="/css/all.min.css" />
     <script>
-      const pageUrl = location.search.substr(1).split("=")[1];
+      const pageId = location.search.substr(1).split("=")[1];
 
-      function deleteThumb(pageUrl) {
-        fetch(`/thumbs?pageUrl=${pageUrl}`, {
+      function deleteThumb(pageId) {
+        fetch(`/thumbs?pageId=${pageId}`, {
           method: "DELETE",
           credentials: "include"
         })
@@ -15,7 +15,7 @@
           .then(setElements);
       }
 
-      function setThumb(pageUrl, clickedThumb) {
+      function setThumb(pageId, clickedThumb) {
         fetch(`/thumbs`, {
           method: "POST",
           credentials: "include",
@@ -23,7 +23,7 @@
             "Content-Type": "application/json"
           },
           body: JSON.stringify({
-            pageUrl,
+            pageId,
             userThumb: clickedThumb === "thumb-up" ? "thumbUp" : "thumbDown"
           })
         })
@@ -32,7 +32,7 @@
       }
 
       function getThumbs() {
-        fetch(`/thumbs?pageUrl=${pageUrl}`, {
+        fetch(`/thumbs?pageId=${pageId}`, {
           credentials: "include"
         })
           .then(res => res.json())
@@ -71,18 +71,18 @@
           const inactiveThumb = document.getElementById(state.inactive);
           inactiveThumb.classList.remove("selected");
           activeThumb.classList.add("selected");
-          activeThumb.addEventListener("click", () => deleteThumb(pageUrl));
+          activeThumb.addEventListener("click", () => deleteThumb(pageId));
           inactiveThumb.addEventListener("click", () =>
-            setThumb(pageUrl, state.inactive)
+            setThumb(pageId, state.inactive)
           );
         } else {
           thumbsUpElement.classList.remove("selected");
           thumbsDownElement.classList.remove("selected");
           document
             .getElementById("thumb-up")
-            .addEventListener("click", () => setThumb(pageUrl, "thumb-up"));
+            .addEventListener("click", () => setThumb(pageId, "thumb-up"));
           thumbsDownElement.addEventListener("click", () =>
-            setThumb(pageUrl, "thumb-down")
+            setThumb(pageId, "thumb-down")
           );
         }
         document.getElementById("thumbs-total").textContent =
