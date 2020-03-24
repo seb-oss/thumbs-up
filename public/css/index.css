@@ -60,7 +60,7 @@ body {
 }
 
 #login-btn.hidden {
-  display: none;
+  visibility: hidden;
 }
 
 .btn {
