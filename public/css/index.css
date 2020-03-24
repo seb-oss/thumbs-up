@@ -1,3 +1,8 @@
+body {
+  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial,
+    sans-serif, Apple Color Emoji, Segoe UI Emoji;
+}
+
 .thumb {
   font-size: 30px;
   font-weight: normal;
@@ -44,6 +49,7 @@
 #thumbs-container {
   align-items: center;
   display: flex;
+  width: max-content;
 }
 
 #thumbs-total {
@@ -51,4 +57,45 @@
   font-weight: bold;
   margin-left: 10px;
   font-family: Arial, Helvetica, sans-serif;
+}
+
+#login-btn.hidden {
+  display: none;
+}
+
+.btn {
+  margin-top: 15px;
+  max-width: max-content;
+  position: relative;
+  display: inline-block;
+  padding: 6px 12px;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 20px;
+  white-space: nowrap;
+  vertical-align: middle;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  background-repeat: repeat-x;
+  background-position: -1px -1px;
+  background-size: 110% 110%;
+  border: 1px solid rgba(27, 31, 35, 0.2);
+  border-radius: 0.25em;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background-image: linear-gradient(-180deg, #2fcb53, #269f42 90%);
+  color: white;
+  border-color: rgba(27, 31, 35, 0.5);
+  text-decoration: none;
+}
+
+#main-container {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  width: max-content;
 }

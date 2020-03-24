@@ -88,21 +88,31 @@
         document.getElementById("thumbs-total").textContent =
           res.thumbsUp - res.thumbsDown;
       }
-
-      if (!document.cookie.includes("token")) {
-        window.location.href = `${apiBaseUrl}/authorize?redirect_uri=${frontendBaseUrl}`;
-      }
-      getThumbs();
+      document.addEventListener("DOMContentLoaded", () => {
+        if (!document.cookie.includes("token")) {
+          const loginBtn = document.getElementById("login-btn");
+          loginBtn.classList.remove("hidden");
+          loginBtn.setAttribute(
+            "href",
+            `/authorize?redirect_uri=${document.location.origin}`
+          );
+        } else {
+          getThumbs();
+        }
+      });
     </script>
   </head>
   <body>
-    <div id="thumbs-container">
-      <i
-        id="thumb-up"
-        class="thumb-item thumb fad fa-thumbs-up fa-flip-horizontal"
-      ></i>
-      <i id="thumb-down" class="thumb-item thumb fad fa-thumbs-down "></i>
-      <p id="thumbs-total" class="thumb-item"></p>
+    <div id="main-container">
+      <div id="thumbs-container">
+        <i
+          id="thumb-up"
+          class="thumb-item thumb fad fa-thumbs-up fa-flip-horizontal"
+        ></i>
+        <i id="thumb-down" class="thumb-item thumb fad fa-thumbs-down "></i>
+        <p id="thumbs-total" class="thumb-item">0</p>
+      </div>
+      <a id="login-btn" class="btn hidden">Sign in to vote</a>
     </div>
   </body>
 </html>
