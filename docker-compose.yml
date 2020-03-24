@@ -5,6 +5,7 @@ services:
     image: node:latest
     volumes:
       - ./lib:/app/lib
+      - ./public:/app/public
       - ./test:/app/test
       - ./package.json:/app/package.json
       - ./package-lock.json:/app/package-lock.json
@@ -17,7 +18,7 @@ services:
       - db_user=thumbs_up
     working_dir: /app
     entrypoint: ["/wait_for_postgres.sh", "db"]
-    command: ["npm", "start"]
+    command: sleep 20000
     ports:
       - 5000:5000
 
@@ -35,6 +36,6 @@ services:
       - 5432:5432
 
 volumes:
-    node_modules:
-    docker-entrypoint-preinitdb.d:
-    postgres-data:
+  node_modules:
+  docker-entrypoint-preinitdb.d:
+  postgres-data:
