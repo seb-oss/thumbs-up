@@ -4,12 +4,10 @@
     <link rel="stylesheet" href="/css/index.css" />
     <link rel="stylesheet" href="/css/all.min.css" />
     <script>
-      const pageUrl = location.search.substr(1).split("=");
-      const apiBaseUrl = "http://localhost:5000";
-      const frontendBaseUrl = "http://localhost:5500";
+      const pageUrl = location.search.substr(1).split("=")[1];
 
       function deleteThumb(pageUrl) {
-        fetch(`${apiBaseUrl}/thumbs?pageUrl=${pageUrl}`, {
+        fetch(`/thumbs?pageUrl=${pageUrl}`, {
           method: "DELETE",
           credentials: "include"
         })
@@ -18,7 +16,7 @@
       }
 
       function setThumb(pageUrl, clickedThumb) {
-        fetch(`${apiBaseUrl}/thumbs`, {
+        fetch(`/thumbs`, {
           method: "POST",
           credentials: "include",
           headers: {
@@ -34,7 +32,7 @@
       }
 
       function getThumbs() {
-        fetch(`${apiBaseUrl}/thumbs?pageUrl=${pageUrl}`, {
+        fetch(`/thumbs?pageUrl=${pageUrl}`, {
           credentials: "include"
         })
           .then(res => res.json())
