@@ -4,7 +4,9 @@
     <link rel="stylesheet" href="/css/index.css" />
     <link rel="stylesheet" href="/css/all.min.css" />
     <script>
-      const pageId = location.search.substr(1).split("=")[1];
+      const urlParams = new URLSearchParams(location.search);
+      const pageId = urlParams.get("page_id");
+      const redirectUri = urlParams.get("redirect_uri");
 
       function deleteThumb(pageId) {
         fetch(`/thumbs?pageId=${pageId}`, {
@@ -94,8 +96,9 @@
           loginBtn.classList.remove("hidden");
           loginBtn.setAttribute(
             "href",
-            `/authorize?redirect_uri=${document.location.origin}`
+            `/authorize?redirect_uri=${redirectUri}`
           );
+          loginBtn.setAttribute("target", "_top");
         } else {
           getThumbs();
         }
