@@ -103,6 +103,18 @@
           getThumbs();
         }
       });
+      addEventListener("message", message => {
+        // add origin check
+        if (message.data.type === "set-theme") {
+          if (message.data.themeSetting === "dark") {
+            document.getElementById("thumbs-container").classList.add("dark");
+          } else {
+            document
+              .getElementById("thumbs-container")
+              .classList.remove("dark");
+          }
+        }
+      });
     </script>
   </head>
   <body>
@@ -110,13 +122,10 @@
       <div id="thumbs-container">
         <i
           id="thumb-up"
-          class="thumb-item thumb fad fa-thumbs-up fa-3x fa-flip-horizontal"
+          class="thumb fad fa-thumbs-up fa-3x fa-flip-horizontal"
         ></i>
-        <i
-          id="thumb-down"
-          class="thumb-item thumb  fa-3x fad fa-thumbs-down "
-        ></i>
-        <p id="thumbs-total" class="thumb-item">0</p>
+        <i id="thumb-down" class="thumb fa-3x fad fa-thumbs-down "></i>
+        <p id="thumbs-total">0</p>
       </div>
       <a id="login-btn" class="btn hidden">Sign in to vote</a>
     </div>

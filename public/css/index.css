@@ -31,7 +31,6 @@ body {
 #thumb-down.selected:hover,
 #thumb-up.selected:hover {
   --fa-secondary-color: #808080;
-  --fa-primary-color: #333333;
 }
 
 .thumb:not(.selected) {
@@ -98,4 +97,19 @@ body {
   display: flex;
   flex-direction: row;
   align-items: center;
+}
+
+#thumbs-container.dark p {
+  color: white;
+}
+
+#thumb-down.dark.selected:hover,
+#thumb-up.dark.selected:hover {
+  --fa-secondary-color: white;
+  --fa-primary-color: white;
+}
+
+.dark:not(.selected) i {
+  --fa-secondary-color: white;
+  --fa-primary-color: white;
 }
