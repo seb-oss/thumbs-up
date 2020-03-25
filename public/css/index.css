@@ -1,6 +1,7 @@
 body {
   font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial,
     sans-serif, Apple Color Emoji, Segoe UI Emoji;
+  margin: 0;
 }
 
 .thumb {
@@ -39,17 +40,17 @@ body {
 }
 
 #thumb-up {
-  padding-bottom: 11px;
+  padding-bottom: 19px;
 }
 
 #thumb-down {
-  padding-top: 11px;
+  padding-top: 19px;
 }
 
 #thumbs-container {
-  align-items: center;
   display: flex;
-  width: max-content;
+  justify-content: center;
+  align-items: center;
 }
 
 #thumbs-total {
@@ -60,18 +61,18 @@ body {
 }
 
 #login-btn.hidden {
-  visibility: hidden;
+  display: none;
 }
 
 .btn {
-  margin-top: 15px;
+  margin-left: 10px;
   max-width: max-content;
   position: relative;
   display: inline-block;
+  height: 100%;
   padding: 6px 12px;
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 600;
-  line-height: 20px;
   white-space: nowrap;
   vertical-align: middle;
   cursor: pointer;
@@ -94,8 +95,7 @@ body {
 }
 
 #main-container {
-  align-items: center;
   display: flex;
-  flex-direction: column;
-  width: max-content;
+  flex-direction: row;
+  align-items: center;
 }
