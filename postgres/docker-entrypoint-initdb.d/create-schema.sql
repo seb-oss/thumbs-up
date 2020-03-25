@@ -30,7 +30,7 @@ CREATE FUNCTION upsert_thumb()
     RETURNS trigger AS
 $$
 BEGIN
-    WITH inserted_url AS (
+    WITH inserted_page_id AS (
         INSERT INTO page_ids(page_id)
         SELECT NEW.page_id
         ON CONFLICT(page_id) DO NOTHING
@@ -40,12 +40,12 @@ BEGIN
         SELECT NEW.github_user
         ON CONFLICT(github_user) DO NOTHING
         RETURNING id, github_user
-    ), upserted_url AS (
+    ), upserted_page_id AS (
         SELECT id, page_id
         FROM page_ids
         UNION ALL
         SELECT id, page_id
-        FROM inserted_url
+        FROM inserted_page_id
     ), upserted_user AS (
         SELECT id, github_user
         FROM github_users
@@ -54,9 +54,9 @@ BEGIN
         FROM inserted_user
     )
     INSERT INTO thumbs(page_id, user_id, thumb_up)
-    SELECT upserted_url.id, upserted_user.id, new_row.thumb_up
+    SELECT upserted_page_id.id, upserted_user.id, new_row.thumb_up
     FROM (SELECT NEW.*) new_row
-    JOIN upserted_url USING (page_id)
+    JOIN upserted_page_id USING (page_id)
     JOIN upserted_user USING (github_user)
     ON CONFLICT(page_id, user_id)
         DO UPDATE SET thumb_up = NEW.thumb_up;
@@ -86,7 +86,7 @@ CREATE TRIGGER delete_thumb_trigger
 INSTEAD OF DELETE ON thumbs_up
 FOR EACH ROW EXECUTE FUNCTION delete_thumb();
 
-CREATE FUNCTION total_thumbs(given_url TEXT, given_user TEXT)
+CREATE FUNCTION total_thumbs(given_page_id TEXT, given_user TEXT)
     RETURNS TABLE (thumbs_up BIGINT, thumbs_down BIGINT, user_thumb_up BOOLEAN)
 AS
 $$
@@ -95,6 +95,6 @@ $$
         count(*) FILTER (WHERE thumb_up = FALSE) AS thumbs_down,
         bool_or(thumb_up) FILTER (WHERE github_user = given_user) AS user_thumb_up
     FROM thumbs_up
-    WHERE page_id = given_url;
+    WHERE page_id = given_page_id;
 $$
 LANGUAGE sql;
