@@ -1,8 +1,7 @@
 FROM node:12.16-alpine
 WORKDIR /app
 
-COPY package-lock.json ./
-COPY package.json ./
+COPY package-lock.json package.json .npmrc* ./
 
 
 COPY lib ./lib
