@@ -3,14 +3,16 @@ const chaiHttp = require("chai-http");
 chai.use(chaiHttp);
 const app = require("../../lib/index");
 const expect = chai.expect;
-const { token } = require("./settings");
+const {
+  e2eTests: { githubToken }
+} = require("../../settings");
 
 describe("POST /thumbs", () => {
   it("adds a thumbs up to examples page", done => {
     chai
       .request(app)
       .post("/thumbs")
-      .set("Cookie", `token=${token}`)
+      .set("Cookie", `token=${githubToken}`)
       .send({
         userThumb: "thumbUp",
         pageId: "examples"
@@ -30,7 +32,7 @@ describe("POST /thumbs", () => {
     chai
       .request(app)
       .post("/thumbs")
-      .set("Cookie", `token=${token}`)
+      .set("Cookie", `token=${githubToken}`)
       .send({
         userThumb: "thumbDown",
         pageId: "new_examples"
@@ -50,7 +52,7 @@ describe("POST /thumbs", () => {
     chai
       .request(app)
       .post("/thumbs")
-      .set("Cookie", `token=${token}`)
+      .set("Cookie", `token=${githubToken}`)
       .send({
         userThumb: "thumbUp",
         pageId: "examples_3"
@@ -59,7 +61,7 @@ describe("POST /thumbs", () => {
         chai
           .request(app)
           .post("/thumbs")
-          .set("Cookie", `token=${token}`)
+          .set("Cookie", `token=${githubToken}`)
           .send({
             userThumb: "thumbDown",
             pageId: "examples_3"
@@ -80,7 +82,7 @@ describe("POST /thumbs", () => {
     chai
       .request(app)
       .post("/thumbs")
-      .set("Cookie", `token=${token}`)
+      .set("Cookie", `token=${githubToken}`)
       .send({
         userThumb: "thumbUp",
         pageId: "examples_4"
@@ -89,7 +91,7 @@ describe("POST /thumbs", () => {
         chai
           .request(app)
           .post("/thumbs")
-          .set("Cookie", `token=${token}`)
+          .set("Cookie", `token=${githubToken}`)
           .send({
             userThumb: "thumbUp",
             pageId: "examples_4"
@@ -110,7 +112,7 @@ describe("POST /thumbs", () => {
     chai
       .request(app)
       .post("/thumbs")
-      .set("Cookie", `token=${token}`)
+      .set("Cookie", `token=${githubToken}`)
       .send({
         userThumb: "thumbUp",
         pageId: "examples_5"
@@ -125,7 +127,7 @@ describe("POST /thumbs", () => {
         chai
           .request(app)
           .del("/thumbs?pageId=examples_5")
-          .set("Cookie", `token=${token}`)
+          .set("Cookie", `token=${githubToken}`)
           .end((err, res) => {
             expect(res).to.have.status(200);
             expect(res.body).to.deep.equal({
