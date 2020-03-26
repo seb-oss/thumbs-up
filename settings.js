@@ -8,7 +8,7 @@ module.exports = {
   dbUser: process.env.db_user,
   mockGithub: false,
   e2eTests: {
-    githubToken: ""
+    githubToken: "test"
     // Filling the "githubToken" field with your own token will let e2e tests use it to query github.
     // If this is the intention, make sure "mockGithub" is set to false
   }

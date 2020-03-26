@@ -8,7 +8,7 @@ const {
 } = require("../../settings");
 
 describe("POST /thumbs", () => {
-  it("adds a thumbs up to examples page", done => {
+  it("can add a thumbs up to a page", done => {
     chai
       .request(app)
       .post("/thumbs")
@@ -28,7 +28,7 @@ describe("POST /thumbs", () => {
       });
   });
 
-  it("adds a thumbs down to new_examples page", done => {
+  it("can add a thumbs down to a page", done => {
     chai
       .request(app)
       .post("/thumbs")
@@ -48,7 +48,7 @@ describe("POST /thumbs", () => {
       });
   });
 
-  it("adds a thumbs down to examples_3 page when user first up then down", done => {
+  it("can add a thumbs down to page when user first votes up then down", done => {
     chai
       .request(app)
       .post("/thumbs")
@@ -78,7 +78,7 @@ describe("POST /thumbs", () => {
       );
   });
 
-  it("adds a thumbs up to examples_4 page when user first up then up again", done => {
+  it("can only add a single thumbs up to page when user first votes up then up again", done => {
     chai
       .request(app)
       .post("/thumbs")
@@ -107,8 +107,10 @@ describe("POST /thumbs", () => {
           })
       );
   });
+});
 
-  it("adds a thumb and removes it from examples_5 page", done => {
+describe("DELETE /thumbs", () => {
+  it("can add a thumb and remove it from page", done => {
     chai
       .request(app)
       .post("/thumbs")
@@ -137,6 +139,48 @@ describe("POST /thumbs", () => {
             });
             done();
           });
+      });
+  });
+});
+
+describe("get /thumbs", () => {
+  before(() =>
+    chai
+      .request(app)
+      .post("/thumbs")
+      .set("Cookie", `token=${githubToken}`)
+      .send({
+        userThumb: "thumbUp",
+        pageId: "examples_1337"
+      })
+  );
+
+  it("gets thumbs added with credentials", done => {
+    chai
+      .request(app)
+      .get("/thumbs")
+      .set("Cookie", `token=${githubToken}`)
+      .query({
+        pageId: "examples_1337"
+      })
+      .end((err, res) => {
+        expect(res.body.thumbsUp).eql(1);
+        expect(res.body.userThumb).eql("thumbUp");
+        done();
+      });
+  });
+
+  it("gets thumbs added without credentials", done => {
+    chai
+      .request(app)
+      .get("/thumbs")
+      .query({
+        pageId: "examples_1337"
+      })
+      .end((err, res) => {
+        expect(res.body.thumbsUp).eql(1);
+        expect(res.body.userThumb).eql(null);
+        done();
       });
   });
 });
