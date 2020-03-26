@@ -58,6 +58,12 @@ body {
   margin-left: 10px;
   font-family: Arial, Helvetica, sans-serif;
 }
+#thumbs-total.negative-number {
+  color: #f03529;
+}
+#thumbs-total.positive-number {
+  color: #007ac7;
+}
 
 #login-btn.hidden,
 #thumbs-container.hidden {

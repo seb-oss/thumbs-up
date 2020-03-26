@@ -34,7 +34,7 @@
       }
 
       function getThumbs() {
-        fetch(`/thumbs?pageId=${pageId}`, {
+        return fetch(`/thumbs?pageId=${pageId}`, {
           credentials: "include"
         })
           .then(res => res.json())
@@ -87,8 +87,16 @@
             setThumb(pageId, "thumb-down")
           );
         }
-        document.getElementById("thumbs-total").textContent =
-          res.thumbsUp - res.thumbsDown;
+        const thumbsTotal = res.thumbsUp - res.thumbsDown;
+        const thumbsTotalElement = document.getElementById("thumbs-total");
+        thumbsTotalElement.textContent = thumbsTotal;
+        thumbsTotalElement.classList.remove("positive-number");
+        thumbsTotalElement.classList.remove("negative-number");
+        if (thumbsTotal < 0) {
+          thumbsTotalElement.classList.add("negative-number");
+        } else if (thumbsTotal > 0) {
+          thumbsTotalElement.classList.add("positive-number");
+        }
       }
       document.addEventListener("DOMContentLoaded", () => {
         getThumbs().then(() =>
@@ -102,9 +110,9 @@
             `/authorize?redirect_uri=${redirectUri}`
           );
           loginBtn.setAttribute("target", "_top");
-        } else {
-          getThumbs();
         }
+      });
+      addEventListener("message", message => {
         // add origin check
         if (message.data.type === "set-theme") {
           if (message.data.themeSetting === "dark") {
