@@ -4,7 +4,8 @@
   "description": "",
   "main": "lib/index.js",
   "scripts": {
-    "start": "nodemon",
+    "start": "node .",
+    "dev": "nodemon",
     "unit-test": "nodemon --exec mocha ./test/unit --recursive",
     "e2e-test": "nodemon --exec mocha ./test/e2e --recursive"
   },
