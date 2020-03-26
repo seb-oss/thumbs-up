@@ -59,7 +59,8 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
-#login-btn.hidden {
+#login-btn.hidden,
+#thumbs-container.hidden {
   display: none;
 }
 

@@ -91,6 +91,9 @@
           res.thumbsUp - res.thumbsDown;
       }
       document.addEventListener("DOMContentLoaded", () => {
+        getThumbs().then(() =>
+          document.getElementById("thumbs-container").classList.remove("hidden")
+        );
         if (!document.cookie.includes("token")) {
           const loginBtn = document.getElementById("login-btn");
           loginBtn.classList.remove("hidden");
@@ -102,8 +105,6 @@
         } else {
           getThumbs();
         }
-      });
-      addEventListener("message", message => {
         // add origin check
         if (message.data.type === "set-theme") {
           if (message.data.themeSetting === "dark") {
@@ -119,7 +120,7 @@
   </head>
   <body>
     <div id="main-container">
-      <div id="thumbs-container">
+      <div id="thumbs-container" class="hidden">
         <i
           id="thumb-up"
           class="thumb fad fa-thumbs-up fa-3x fa-flip-horizontal"
