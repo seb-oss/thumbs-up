@@ -12,17 +12,14 @@ Since these are not freely distributed, you need to to either change the HTML to
 
 ### Installation
 
-Note that there is currently not a package-lock present in the repo. Which means you need to run `npm i` before you try to build the image.
-
 1. `npm i`
 2. `npm start` / `npm e2e-test`
 
 or use docker compose
 
-1. `npm i`
-2. `docker-compose up`
-3. step inside the container
-4. run `npm start` / `npm e2e-test`
+1. `docker-compose up`
+2. step inside the container
+3. run `npm start` / `npm e2e-test`
 
 ### Mocking github
 
