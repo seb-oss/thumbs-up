@@ -24,6 +24,10 @@ or use docker compose
 3. step inside the container
 4. run `npm start` / `npm e2e-test`
 
+### Mocking github
+
+When running the tests it is sometimes practical to mock the github endpoint. This is done with the nock npm package and is enabled with the `mockGithub` in settings.js
+
 ## Integration with your webpage
 
 1. Create an [Oauth app](https://developer.github.com/apps/building-oauth-apps/creating-an-oauth-app/).
