@@ -2,7 +2,8 @@ version: "3.7"
 
 services:
   app:
-    image: dev-community.repo.sebank.se/thumbs-up
+     build:
+       context: ./postgres
     volumes:
       - ./public:/app/public
       - ./wait_for_postgres.sh:/wait_for_postgres.sh
