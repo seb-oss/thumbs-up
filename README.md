@@ -8,8 +8,7 @@ This project was created as a help to help ensure the quality of internal docume
 
 ### PLEASE NOTE: This repo uses Font Awesome Pro icons
 
-Since these are not freely distributed, you need to to either change the HTML to [include a different icon](https://fontawesome.com/icons/thumbs-up), or acquire a Font Awesome license key. To build with your key, create a [.npmrc file](https://docs.npmjs.com/files/npmrc) to the root of the project and [include the auth token](https://docs.npmjs.com/using-private-packages-in-a-ci-cd-workflow#create-and-check-in-a-project-specific-npmrc-file) there. 
-
+Since these are not freely distributed, you need to to either change the HTML to [include a different icon](https://fontawesome.com/icons/thumbs-up), or acquire a Font Awesome license key. To build with your key, create a [.npmrc file](https://docs.npmjs.com/files/npmrc) to the root of the project and [include the auth token](https://docs.npmjs.com/using-private-packages-in-a-ci-cd-workflow#create-and-check-in-a-project-specific-npmrc-file) there.
 
 ### Installation
 
@@ -28,11 +27,13 @@ or use docker compose
 ## Integration with your webpage
 
 1. Create an [Oauth app](https://developer.github.com/apps/building-oauth-apps/creating-an-oauth-app/).
-2. Deploy the application (or fill in the docker-compose) somewhere with the following environment variables, they will be given to the application through settings.js:
+2. Set the app Authorization callback URL to http://localhost:5000/authorized to run locally or where ever you are deploying + /authorized
+3. Deploy the application (or fill in the docker-compose) somewhere with the following environment variables, they will be given to the application through settings.js:
    - githubUrl - either https://github.com or optionally an enterprise github installation e.g https://github.yourcompany.se
    - client_id - fetch this from your newly created Oauth app
    - client_secret - fetch this from your newly created Oauth app
    - state_password - a randomly generated string, preferably 32 characters
-3. Create an iframe inside your application where the votes should take place with the necessary params, e.g:
+4. To make sure everything works accordingly, visit http://localhost:5000/?page_id=exampleid&redirect_uri=http://localhost:5000, if you are running locally. This should give you a working frame for voting for page id "exampleid". If you are able to login and place votes, everything is ready to be integrated in an iframe.
+5. Create an iframe inside your application where the votes should take place with the necessary params (pageId, ), e.g:
 
    `<iframe id="thumbs-up-frame" src="<URL of the deployed THUMBS_UP service>?redirect_uri=<URL to be redirected to after authed>&page_id=<ID of the page to be voted upon>></iframe>`
