@@ -2,8 +2,7 @@ version: "3.7"
 
 services:
   app:
-     build:
-       context: ./postgres
+    build: .
     volumes:
       - ./public:/app/public
       - ./wait_for_postgres.sh:/wait_for_postgres.sh
