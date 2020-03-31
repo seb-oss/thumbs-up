@@ -5,7 +5,6 @@ services:
     build: .
     volumes:
       - ./public:/app/public
-      - ./wait_for_postgres.sh:/wait_for_postgres.sh
       - ./lib:/app/lib
       - ./test:/app/test
       - ./settings.js:/app/settings.js
@@ -19,9 +18,7 @@ services:
       - client_id=
       - client_secret=
       - state_password=
-    # working_dir: /app
-    # entrypoint: ["/wait_for_postgres.sh", "db"]
-    command: tail -f /dev/null
+    entrypoint: ["/wait_for_postgres.sh"]
     ports:
       - 5000:5000
 
