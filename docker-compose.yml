@@ -18,7 +18,7 @@ services:
       - client_id=
       - client_secret=
       - state_password=
-#   command: ["tail", "-f", "/dev/null"]
+    entrypoint: ["/wait_for_postgres.sh"]
     ports:
       - 5000:5000
 

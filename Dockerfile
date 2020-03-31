@@ -10,5 +10,4 @@ COPY settings.js ./
 RUN npm i
 
 COPY wait_for_postgres.sh /
-ENTRYPOINT [ "/wait_for_postgres.sh" ]
 CMD [ "npm", "start" ]
