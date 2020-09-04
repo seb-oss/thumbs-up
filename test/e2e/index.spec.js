@@ -7,6 +7,10 @@ const {
   e2eTests: { githubToken }
 } = require("../../settings");
 
+// Ensure there are no existing thumbs in the database before running the tests
+const pgAdapter = require("../../lib/adapters/postgresAdapter");
+before(pgAdapter.truncateThumbs);
+
 describe("POST /thumbs", () => {
   it("can add a thumbs up to a page", done => {
     chai
