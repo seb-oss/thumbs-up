@@ -1,11 +1,49 @@
 const chai = require("chai");
 const chaiHttp = require("chai-http");
 chai.use(chaiHttp);
+const url = require("url");
+const querystring = require("querystring");
 const app = require("../../lib/index");
 const expect = chai.expect;
 const {
+  githubUrl,
   e2eTests: { githubToken }
 } = require("../../settings");
+
+describe("GET /authorize", () => {
+  it("can validate the required query parameters", done => {
+    chai
+      .request(app)
+      .get("/authorize")
+      .end((err, res) => {
+        expect(res).to.have.status(400);
+        expect(res).to.be.json;
+        expect(res).to.have.property('body');
+        expect(res.body).to.have.keys(["error", "message"]);
+        expect(res.body.message).to.match(/.*redirect_uri.*/);
+        done();
+      });
+  })
+
+  it("can redirect the user to the correct URL", done => {
+    chai
+      .request(app)
+      .get("/authorize")
+      .query({
+        redirect_uri: "https://some/fake/url"
+      })
+      .redirects(0)
+      .end((err, res) => {
+        expect(res).to.have.status(302);
+        const redirect = url.parse(res.headers.location);
+        expect(`${redirect.protocol}//${redirect.hostname}`).to.eql(githubUrl);
+        expect(redirect.pathname).to.eql("/login/oauth/authorize");
+        const query = querystring.parse(redirect.query);
+        expect(query).to.have.keys(["client_id", "state"]);
+        done();
+      });
+  })
+})
 
 describe("POST /thumbs", () => {
   it("can add a thumbs up to a page", done => {
