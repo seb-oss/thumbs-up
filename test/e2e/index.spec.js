@@ -3,12 +3,15 @@ const chaiHttp = require("chai-http");
 chai.use(chaiHttp);
 const url = require("url");
 const querystring = require("querystring");
+const someFakeUrl = "https://some/fake/url";
 const app = require("../../lib/index");
 const expect = chai.expect;
 const {
   githubUrl,
+  state_password,
   e2eTests: { githubToken }
 } = require("../../settings");
+const { encodeState } = require("../../lib/state");
 
 describe("GET /authorize", () => {
   it("can validate the required query parameters", done => {
@@ -30,7 +33,7 @@ describe("GET /authorize", () => {
       .request(app)
       .get("/authorize")
       .query({
-        redirect_uri: "https://some/fake/url"
+        redirect_uri: someFakeUrl
       })
       .redirects(0)
       .end((err, res) => {
@@ -57,6 +60,42 @@ describe("GET /authorized", () => {
         expect(res.body).to.have.keys(["error", "message"]);
         expect(res.body.message).to.include("code");
         expect(res.body.message).to.include("state");
+        done();
+      });
+  })
+
+  it("can validate the encoding of the state parameter", done => {
+    chai
+      .request(app)
+      .get("/authorized")
+      .query({
+        code: "invalid",
+        state: "notEncoded",
+      })
+      .end((err, res) => {
+        expect(res).to.have.status(400);
+        expect(res).to.be.json;
+        expect(res).to.have.property("body");
+        expect(res.body).to.have.keys(["error", "message"]);
+        expect(res.body.message).to.include("state");
+        done();
+      });
+  })
+
+  it("can validate the authenticity of the code parameter", done => {
+    chai
+      .request(app)
+      .get("/authorized")
+      .query({
+        code: "invalid",
+        state: encodeState(someFakeUrl, state_password),
+      })
+      .end((err, res) => {
+        expect(res).to.have.status(500);
+        expect(res).to.be.json;
+        expect(res).to.have.property("body");
+        expect(res.body).to.have.keys(["error", "message"]);
+        expect(res.body.message).to.include("code");
         done();
       });
   })
