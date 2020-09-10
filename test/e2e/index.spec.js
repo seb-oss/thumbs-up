@@ -18,9 +18,9 @@ describe("GET /authorize", () => {
       .end((err, res) => {
         expect(res).to.have.status(400);
         expect(res).to.be.json;
-        expect(res).to.have.property('body');
+        expect(res).to.have.property("body");
         expect(res.body).to.have.keys(["error", "message"]);
-        expect(res.body.message).to.match(/.*redirect_uri.*/);
+        expect(res.body.message).to.include("redirect_uri");
         done();
       });
   })
@@ -40,6 +40,23 @@ describe("GET /authorize", () => {
         expect(redirect.pathname).to.eql("/login/oauth/authorize");
         const query = querystring.parse(redirect.query);
         expect(query).to.have.keys(["client_id", "state"]);
+        done();
+      });
+  })
+})
+
+describe("GET /authorized", () => {
+  it("can validate the required query parameters", done => {
+    chai
+      .request(app)
+      .get("/authorized")
+      .end((err, res) => {
+        expect(res).to.have.status(400);
+        expect(res).to.be.json;
+        expect(res).to.have.property("body");
+        expect(res.body).to.have.keys(["error", "message"]);
+        expect(res.body.message).to.include("code");
+        expect(res.body.message).to.include("state");
         done();
       });
   })
