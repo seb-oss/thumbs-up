@@ -237,7 +237,7 @@ describe("DELETE /thumbs", () => {
   });
 });
 
-describe("get /thumbs", () => {
+describe("GET /thumbs", () => {
   before(() =>
     chai
       .request(app)
@@ -274,6 +274,24 @@ describe("get /thumbs", () => {
       .end((err, res) => {
         expect(res.body.thumbsUp).eql(1);
         expect(res.body.userThumb).eql(null);
+        done();
+      });
+  });
+
+  it("returns a meaningful error on invalid credentials", done => {
+    chai
+      .request(app)
+      .get("/thumbs")
+      .set("Cookie", `token=invalid`)
+      .query({
+        pageId: "examples_1337"
+      })
+      .end((err, res) => {
+        expect(res).to.have.status(401);
+        expect(res).to.be.json;
+        expect(res).to.have.property("body");
+        expect(res.body).to.have.keys(["error", "message"]);
+        expect(res.body.message).to.match(/unauthorized/i);
         done();
       });
   });
