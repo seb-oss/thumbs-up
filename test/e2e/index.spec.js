@@ -1,11 +1,105 @@
 const chai = require("chai");
 const chaiHttp = require("chai-http");
 chai.use(chaiHttp);
+const url = require("url");
+const querystring = require("querystring");
+const someFakeUrl = "https://some/fake/url";
 const app = require("../../lib/index");
 const expect = chai.expect;
 const {
+  githubUrl,
+  state_password,
   e2eTests: { githubToken }
 } = require("../../settings");
+const { encodeState } = require("../../lib/state");
+
+describe("GET /authorize", () => {
+  it("can validate the required query parameters", done => {
+    chai
+      .request(app)
+      .get("/authorize")
+      .end((err, res) => {
+        expect(res).to.have.status(400);
+        expect(res).to.be.json;
+        expect(res).to.have.property("body");
+        expect(res.body).to.have.keys(["error", "message"]);
+        expect(res.body.message).to.include("redirect_uri");
+        done();
+      });
+  })
+
+  it("can redirect the user to the correct URL", done => {
+    chai
+      .request(app)
+      .get("/authorize")
+      .query({
+        redirect_uri: someFakeUrl
+      })
+      .redirects(0)
+      .end((err, res) => {
+        expect(res).to.have.status(302);
+        const redirect = url.parse(res.headers.location);
+        expect(`${redirect.protocol}//${redirect.hostname}`).to.eql(githubUrl);
+        expect(redirect.pathname).to.eql("/login/oauth/authorize");
+        const query = querystring.parse(redirect.query);
+        expect(query).to.have.keys(["client_id", "state"]);
+        done();
+      });
+  })
+})
+
+describe("GET /authorized", () => {
+  it("can validate the required query parameters", done => {
+    chai
+      .request(app)
+      .get("/authorized")
+      .end((err, res) => {
+        expect(res).to.have.status(400);
+        expect(res).to.be.json;
+        expect(res).to.have.property("body");
+        expect(res.body).to.have.keys(["error", "message"]);
+        expect(res.body.message).to.include("code");
+        expect(res.body.message).to.include("state");
+        done();
+      });
+  })
+
+  it("can validate the encoding of the state parameter", done => {
+    chai
+      .request(app)
+      .get("/authorized")
+      .query({
+        code: "invalid",
+        state: "notEncoded",
+      })
+      .end((err, res) => {
+        expect(res).to.have.status(400);
+        expect(res).to.be.json;
+        expect(res).to.have.property("body");
+        expect(res.body).to.have.keys(["error", "message"]);
+        expect(res.body.message).to.include("state");
+        done();
+      });
+  })
+
+  it("can validate the authenticity of the code parameter", done => {
+    chai
+      .request(app)
+      .get("/authorized")
+      .query({
+        code: "invalid",
+        state: encodeState(someFakeUrl, state_password),
+      })
+      .end((err, res) => {
+        expect(res).to.have.status(500);
+        expect(res).to.be.json;
+        expect(res).to.have.property("body");
+        expect(res.body).to.have.keys(["error", "message"]);
+        expect(res.body.message).to.include("code");
+        done();
+      });
+  })
+})
 
 describe("POST /thumbs", () => {
   it("can add a thumbs up to a page", done => {
@@ -143,7 +237,7 @@ describe("DELETE /thumbs", () => {
   });
 });
 
-describe("get /thumbs", () => {
+describe("GET /thumbs", () => {
   before(() =>
     chai
       .request(app)
@@ -180,6 +274,24 @@ describe("get /thumbs", () => {
       .end((err, res) => {
         expect(res.body.thumbsUp).eql(1);
         expect(res.body.userThumb).eql(null);
+        done();
+      });
+  });
+
+  it("returns a meaningful error on invalid credentials", done => {
+    chai
+      .request(app)
+      .get("/thumbs")
+      .set("Cookie", `token=invalid`)
+      .query({
+        pageId: "examples_1337"
+      })
+      .end((err, res) => {
+        expect(res).to.have.status(401);
+        expect(res).to.be.json;
+        expect(res).to.have.property("body");
+        expect(res.body).to.have.keys(["error", "message"]);
+        expect(res.body.message).to.match(/unauthorized/i);
         done();
       });
   });
