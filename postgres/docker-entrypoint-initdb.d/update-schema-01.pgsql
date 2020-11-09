@@ -14,21 +14,44 @@ CREATE VIEW thumb_count AS
         GROUP BY page_id
     ) t JOIN page_ids p ON p.id = t.page_id;
 
-CREATE FUNCTION top_thumbs(_orderby text, _limit int)
+CREATE FUNCTION top_thumbs_up(_limit int)
     RETURNS TABLE (page_id TEXT, thumbs_up BIGINT, thumbs_down BIGINT) AS
 $$
-BEGIN
-    RETURN QUERY EXECUTE format('
-        SELECT
-            page_id,
-            thumbs_up,
-            thumbs_down
-        FROM thumb_count
-        ORDER BY %I
-        LIMIT $1
-    ', _orderby)
-    USING _limit;
-END
+    SELECT
+        page_id,
+        thumbs_up,
+        thumbs_down
+    FROM thumb_count
+    ORDER BY thumbs_up
+    LIMIT (_limit);
 $$
-LANGUAGE plpgsql
+LANGUAGE sql
+STABLE;
+
+CREATE FUNCTION top_thumbs_down(_limit int)
+    RETURNS TABLE (page_id TEXT, thumbs_up BIGINT, thumbs_down BIGINT) AS
+$$
+    SELECT
+        page_id,
+        thumbs_up,
+        thumbs_down
+    FROM thumb_count
+    ORDER BY thumbs_down
+    LIMIT (_limit);
+$$
+LANGUAGE sql
+STABLE;
+
+CREATE FUNCTION top_thumbs_net(_limit int)
+    RETURNS TABLE (page_id TEXT, thumbs_up BIGINT, thumbs_down BIGINT) AS
+$$
+    SELECT
+        page_id,
+        thumbs_up,
+        thumbs_down
+    FROM thumb_count
+    ORDER BY thumbs_net
+    LIMIT (_limit);
+$$
+LANGUAGE sql
 STABLE;
