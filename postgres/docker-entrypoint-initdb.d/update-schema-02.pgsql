@@ -1,5 +1,5 @@
 
-CREATE VIEW thumb_count AS
+CREATE OR REPLACE VIEW thumb_count AS
     SELECT
         p.page_id,
         t.thumbs_up,
@@ -14,7 +14,7 @@ CREATE VIEW thumb_count AS
         GROUP BY page_id
     ) t JOIN page_ids p ON p.id = t.page_id;
 
-CREATE FUNCTION top_thumbs_up(_limit int)
+CREATE OR REPLACE FUNCTION top_thumbs_up(_limit int)
     RETURNS TABLE (page_id TEXT, thumbs_up BIGINT, thumbs_down BIGINT) AS
 $$
     SELECT
@@ -22,13 +22,13 @@ $$
         thumbs_up,
         thumbs_down
     FROM thumb_count
-    ORDER BY thumbs_up
+    ORDER BY thumbs_up DESC
     LIMIT (_limit);
 $$
 LANGUAGE sql
 STABLE;
 
-CREATE FUNCTION top_thumbs_down(_limit int)
+CREATE OR REPLACE FUNCTION top_thumbs_down(_limit int)
     RETURNS TABLE (page_id TEXT, thumbs_up BIGINT, thumbs_down BIGINT) AS
 $$
     SELECT
@@ -36,13 +36,13 @@ $$
         thumbs_up,
         thumbs_down
     FROM thumb_count
-    ORDER BY thumbs_down
+    ORDER BY thumbs_down DESC
     LIMIT (_limit);
 $$
 LANGUAGE sql
 STABLE;
 
-CREATE FUNCTION top_thumbs_net(_limit int)
+CREATE OR REPLACE FUNCTION top_thumbs_net(_limit int)
     RETURNS TABLE (page_id TEXT, thumbs_up BIGINT, thumbs_down BIGINT) AS
 $$
     SELECT
@@ -50,7 +50,7 @@ $$
         thumbs_up,
         thumbs_down
     FROM thumb_count
-    ORDER BY thumbs_net
+    ORDER BY thumbs_net DESC
     LIMIT (_limit);
 $$
 LANGUAGE sql
