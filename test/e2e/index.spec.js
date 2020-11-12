@@ -296,3 +296,25 @@ describe("GET /thumbs", () => {
       });
   });
 });
+
+describe("GET /top-pages", () => {
+  const maxPages = 3;
+  it("should set the CORS header given some other origin", (done) => {
+    chai.request(app)
+    .get("/top-pages")
+    .set("Origin", "https://some.other.domain.com")
+    .query({
+      thumbs: "up",
+      limit: maxPages
+    })
+    .end((err, res) => {
+      expect(err).to.be.null;
+      expect(res).to.have.status(200);
+      expect(res).to.be.json;
+      expect(res.headers).to.have.property("access-control-allow-origin", "*");
+      expect(res.body).to.have.lengthOf.at.most(maxPages);
+      expect(res.body[0]).to.have.all.keys("pageId", "thumbsUp", "thumbsDown");
+      done();
+    });
+  });
+});
